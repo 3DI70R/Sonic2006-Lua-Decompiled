@@ -1,0 +1,10 @@
+WVO = {StartFrame = 0, EndFrame = 298}
+DTD = {StartFrame = 300, EndFrame = 598}
+WAP = {StartFrame = 600, EndFrame = 898}
+CSC = {StartFrame = 900, EndFrame = 1198}
+FLC = {StartFrame = 1200, EndFrame = 1498}
+RCT = {StartFrame = 1500, EndFrame = 1798}
+TPJ = {StartFrame = 1800, EndFrame = 2098}
+KDV = {StartFrame = 2100, EndFrame = 2398}
+AQA = {StartFrame = 2400, EndFrame = 2698}
+ETC = {StartFrame = 2700, EndFrame = 2998}
