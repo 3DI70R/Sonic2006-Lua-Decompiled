@@ -36,16 +36,18 @@ function RenderCSM(_ARG_0_, _ARG_1_, _ARG_2_)
   LockBlendMode(_ARG_0_, "true")
   scissor_min = 2
   scissor_size = CSMTextureSize - 4
-  for _FORARG_ = 0, _ARG_1_ - 1 do
+
+  -- For loop reconstructed
+  for i = 0, _ARG_1_ - 1 do
     if GetPlatform() == "ps3" then
-      SetFrameBufferObject(_ARG_0_, csm_rt .. 0 - 1, "depthstencil_1024", "color_depth", 127, 255, 255, 127)
+      SetFrameBufferObject(_ARG_0_, csm_rt .. i, "depthstencil_1024", "color_depth", 127, 255, 255, 127)
     elseif GetPlatform() == "xbox360" then
-      SetFrameBufferObject(_ARG_0_, "null", csm_rt .. 0 - 1, "depth", 0, 0, 0, 0, "1x", "not_restored")
+      SetFrameBufferObject(_ARG_0_, "null", csm_rt .. i, "depth", 0, 0, 0, 0, "1x", "not_restored")
     else
-      SetFrameBufferObject(_ARG_0_, csm_rt .. 0 - 1, "depthstencil_1024", "color_depth", 255, 255, 255, 255)
+      SetFrameBufferObject(_ARG_0_, csm_rt .. i, "depthstencil_1024", "color_depth", 255, 255, 255, 255)
     end
     if GetPlatform() == "xbox360" then
-      if 0 - 1 == _ARG_1_ - 1 then
+      if i == _ARG_1_ - 1 then
         SetScissorTest(_ARG_0_, "true")
         SetScissorRect(_ARG_0_, scissor_min, scissor_min, scissor_size, scissor_size)
       else
@@ -58,8 +60,8 @@ function RenderCSM(_ARG_0_, _ARG_1_, _ARG_2_)
       SetScissorTest(_ARG_0_, "true")
     end
     ResetViewport(_ARG_0_)
-    SetCurrentCamera(_ARG_0_, "light" .. 0 - 1)
-    if _ARG_2_ > 0 - 1 then
+    SetCurrentCamera(_ARG_0_, "light" .. i)
+    if _ARG_2_ > i then
       SetConstantShader(_ARG_0_, "shadowmap", "zout", "DefaultTechnique")
       RenderWorld(_ARG_0_, "shadowmap", "all", "opaque", "shadow")
       SetConstantShader(_ARG_0_, "shadowmap", "zout_pt", "DefaultTechnique")
@@ -71,6 +73,7 @@ function RenderCSM(_ARG_0_, _ARG_1_, _ARG_2_)
       RenderWorld(_ARG_0_, "shadowmap", "sectors", "punchthrough", "shadow")
     end
   end
+  
   SetScissorTest(_ARG_0_, "false")
   SetConstantShader(_ARG_0_, "shadowmap", "null")
   LockBlendMode(_ARG_0_, "false")

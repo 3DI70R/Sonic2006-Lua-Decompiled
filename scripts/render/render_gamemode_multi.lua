@@ -10,24 +10,29 @@ function Build(_ARG_0_)
   if 2 == 2 then
   else
   end
-  for _FORARG_ = 1, 2 do
-    CreateTexture(_ARG_0_, "coframebuffer" .. 1 - 1 - 1, GetSurfaceWidth(_ARG_0_, "backbuffer") / 2, GetSurfaceHeight(_ARG_0_, "backbuffer") / 2, 1, GetFrameBufferFormat(_ARG_0_))
+
+  -- For loop reconstructed
+  for i = 1, 2 do
+    CreateTexture(_ARG_0_, "coframebuffer" .. i, GetSurfaceWidth(_ARG_0_, "backbuffer") / 2, GetSurfaceHeight(_ARG_0_, "backbuffer") / 2, 1, GetFrameBufferFormat(_ARG_0_))
   end
+  
   CreateDepthStencilSurface(_ARG_0_, "codepthstencil", GetSurfaceWidth(_ARG_0_, "backbuffer") / 2, GetSurfaceHeight(_ARG_0_, "backbuffer") / 2, "D24S8")
   if GetPlatform() == "xbox360" then
     CSMTextureSize = 512
   end
   CreateCSM(_ARG_0_)
-  for _FORARG_ = 1, 2 do
-    SetCurrentScreen(_ARG_0_, 1 - 1 - 1)
+
+  -- For loop reconstructed
+  for i = 1, 2 do
+    SetCurrentScreen(_ARG_0_, i)
     ApplySceneParams(_ARG_0_)
     RenderCSM(_ARG_0_, GenerateCSMLevels, GenerateCSMObjects)
     PrepareColorRender(_ARG_0_)
-    SetFrameBufferObjectOnce(_ARG_0_, "coframebuffer" .. 1 - 1 - 1, "codepthstencil", "all", 0, 0, 0, 0)
+    SetFrameBufferObjectOnce(_ARG_0_, "coframebuffer" .. i, "codepthstencil", "all", 0, 0, 0, 0)
     SetViewport(_ARG_0_, 0, 0, GetSurfaceWidth(_ARG_0_, "backbuffer") / 2, GetSurfaceHeight(_ARG_0_, "backbuffer") / 2)
     SetCurrentCamera(_ARG_0_, "main")
     AutoSetAspect(_ARG_0_)
-    RenderMainForMulti(_ARG_0_, "coframebuffer" .. 1 - 1 - 1, "codepthstencil")
+    RenderMainForMulti(_ARG_0_, "coframebuffer" .. i, "codepthstencil")
     PostColorRender(_ARG_0_)
     SetCurrentCamera(_ARG_0_, "mainglare")
     AutoSetAspect(_ARG_0_)
@@ -40,9 +45,12 @@ function Build(_ARG_0_)
       RenderCSD(_ARG_0_)
     end
   end
+
   SetFrameBufferObjectOnce(_ARG_0_, "backbuffer", "null", "color", 0, 0, 0, 0)
   SetFrameBufferObject(_ARG_0_, "backbuffer", "null", "none", 0, 0, 0, 0)
-  for _FORARG_ = 1, 2 do
+
+  -- For loop reconstructed
+  for i = 1, 2 do
     SetViewport(_ARG_0_, ({
       {
         0,
@@ -56,7 +64,7 @@ function Build(_ARG_0_)
         GetSurfaceWidth(_ARG_0_, "backbuffer") / 2,
         (GetSurfaceHeight(_ARG_0_, "backbuffer"))
       }
-    })[1 - 1][1], ({
+    })[i][1], ({
       {
         0,
         0,
@@ -69,7 +77,7 @@ function Build(_ARG_0_)
         GetSurfaceWidth(_ARG_0_, "backbuffer") / 2,
         (GetSurfaceHeight(_ARG_0_, "backbuffer"))
       }
-    })[1 - 1][2], ({
+    })[i][2], ({
       {
         0,
         0,
@@ -82,7 +90,7 @@ function Build(_ARG_0_)
         GetSurfaceWidth(_ARG_0_, "backbuffer") / 2,
         (GetSurfaceHeight(_ARG_0_, "backbuffer"))
       }
-    })[1 - 1][3], ({
+    })[i][3], ({
       {
         0,
         0,
@@ -95,13 +103,14 @@ function Build(_ARG_0_)
         GetSurfaceWidth(_ARG_0_, "backbuffer") / 2,
         (GetSurfaceHeight(_ARG_0_, "backbuffer"))
       }
-    })[1 - 1][4])
-    Rasterize(_ARG_0_, "coframebuffer" .. 1 - 1 - 1)
+    })[i][4])
+    Rasterize(_ARG_0_, "coframebuffer" .. i)
     if 2 < 2 then
-      SetCurrentScreen(_ARG_0_, 1 - 1 - 1)
+      SetCurrentScreen(_ARG_0_, i)
       RenderCSD(_ARG_0_)
     end
   end
+
   ResetViewport(_ARG_0_)
   SetCurrentScreen(_ARG_0_, -1)
   RenderCSD(_ARG_0_)

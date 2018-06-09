@@ -387,10 +387,13 @@ Enemy.secondmefiress_shadow = {
     CallResetCamera(_ARG_0_, "main")
     if GetParameter(_ARG_0_, "FatalEventId") == 0 then
       CallSetCamera(_ARG_0_, "foo", 1, 1000, 0, 0, 0, 100)
-      for _FORARG_ = 1, 10 do
-        FirstMefiress_Warp(_ARG_0_, 1000 * math.cos(0), Enemy.secondmefiress_shadow.TerrainBaseHeight + 75, 1000 * math.sin(0), 10)
+
+      -- For loop reconstructed
+      for i = 1, 10 do
+        FirstMefiress_Warp(_ARG_0_, 1000 * math.cos(i), Enemy.secondmefiress_shadow.TerrainBaseHeight + 75, 1000 * math.sin(i), 10)
         FirstMefiress_DoCommand(_ARG_0_, "illusion")
       end
+
       FirstMefiress_Warp(_ARG_0_, 1000 * math.cos(0 + 2 * math.pi / 10), Enemy.secondmefiress_shadow.TerrainBaseHeight + 75 + 1000 / 10, 1000 * math.sin(0 + 2 * math.pi / 10), 10)
       CallResetCamera(_ARG_0_, "foo")
       CallSetCamera(_ARG_0_, "bar", 1, 1000, 0, 0, 0, 100, 1.5)

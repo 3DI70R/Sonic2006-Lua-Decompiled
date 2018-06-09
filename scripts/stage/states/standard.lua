@@ -54,20 +54,22 @@ function ActionStage.Clear.Main(_ARG_0_, _ARG_1_)
   end
   Game.Sleep(5)
   _ARG_1_.notify = false
-  for _FORARG_ = 1, 4 do
+
+  -- For loop reconstructed
+  for r = 1, 4 do
     if ({
       stage = _ARG_1_.result_name,
       score = _ARG_1_:GetScore(),
       time = _ARG_1_:GetPlayTime(),
       ring = _ARG_1_:GetRingCount(),
       timeBonus = _ARG_1_:CalcTimeBonus(),
-      rank = 0,
-      totalScore = self + self,
-      rank = 0 + 1
-    }).totalScore > _ARG_1_:GetRankTable()[1 - 1] then
+      rank = r,
+      totalScore = self.score + self.timeBonus,
+    }).totalScore > _ARG_1_:GetRankTable()[r] then
       break
     end
   end
+
   while _ARG_1_.notify == false do
     Game.Sleep(0)
   end
