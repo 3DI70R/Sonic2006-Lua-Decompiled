@@ -150,12 +150,16 @@ Enemy.secondmefiress_shadow = {
         FirstMefiress_DoCommand(_ARG_0_, "summon", 0 + 5)
       elseif hp <= 0.5 then
         FirstMefiress_SetPointGroup(_ARG_0_, "KyozoressAppear")
+        if 0.5 > GetRandom(_ARG_0_) then
+        end
         FirstMefiress_DoCommand(_ARG_0_, "summon", 1)
         FirstMefiress_DoCommand(_ARG_0_, "summon", 1 + 1)
         FirstMefiress_DoCommand(_ARG_0_, "summon", 1 + 3)
         FirstMefiress_DoCommand(_ARG_0_, "summon", 1 + 4)
       else
         FirstMefiress_SetPointGroup(_ARG_0_, "KyozoressAppear")
+        if 0.5 > GetRandom(_ARG_0_) then
+        end
         FirstMefiress_DoCommand(_ARG_0_, "summon", 1)
         FirstMefiress_DoCommand(_ARG_0_, "summon", 1 + 2)
         FirstMefiress_DoCommand(_ARG_0_, "summon", 1 + 4)
@@ -173,6 +177,8 @@ Enemy.secondmefiress_shadow = {
       FirstMefiress_DoCommand(_ARG_0_, "summon", 0 + 5)
     elseif hp <= 0.5 then
       FirstMefiress_SetPointGroup(_ARG_0_, "KyozoressAppear")
+      if 0.5 > GetRandom(_ARG_0_) then
+      end
       FirstMefiress_DoCommand(_ARG_0_, "summon", 1)
       FirstMefiress_DoCommand(_ARG_0_, "summon", 1 + 2)
       FirstMefiress_DoCommand(_ARG_0_, "summon", 1 + 4)
@@ -180,7 +186,7 @@ Enemy.secondmefiress_shadow = {
       FirstMefiress_SetPointGroup(_ARG_0_, "KyozoressAppear")
       if 0.25 > GetRandom(_ARG_0_) then
       elseif 0.5 > GetRandom(_ARG_0_) then
-      else
+      elseif GetRandom(_ARG_0_) < 0.75 then
       end
       FirstMefiress_DoCommand(_ARG_0_, "summon", 3)
       FirstMefiress_DoCommand(_ARG_0_, "summon", 3 + 2)
@@ -381,4 +387,93 @@ Enemy.secondmefiress_shadow = {
     CallResetCamera(_ARG_0_, "main")
     if GetParameter(_ARG_0_, "FatalEventId") == 0 then
       CallSetCamera(_ARG_0_, "foo", 1, 1000, 0, 0, 0, 100)
-      for 
+      for _FORARG_ = 1, 10 do
+        FirstMefiress_Warp(_ARG_0_, 1000 * math.cos(0), Enemy.secondmefiress_shadow.TerrainBaseHeight + 75, 1000 * math.sin(0), 10)
+        FirstMefiress_DoCommand(_ARG_0_, "illusion")
+      end
+      FirstMefiress_Warp(_ARG_0_, 1000 * math.cos(0 + 2 * math.pi / 10), Enemy.secondmefiress_shadow.TerrainBaseHeight + 75 + 1000 / 10, 1000 * math.sin(0 + 2 * math.pi / 10), 10)
+      CallResetCamera(_ARG_0_, "foo")
+      CallSetCamera(_ARG_0_, "bar", 1, 1000, 0, 0, 0, 100, 1.5)
+      CallHintMessage(_ARG_0_, "hint_bos05_e07_mf", false)
+      FirstMefiress_DeathBall(_ARG_0_, 15, "LL")
+    elseif GetParameter(_ARG_0_, "FatalEventId") == 1 then
+      CallMessage(_ARG_0_, "guard_on")
+      FirstMefiress_Warp(_ARG_0_, 0, 750, 0, 30)
+      WaitFixed(_ARG_0_, 1)
+      CallMessage(_ARG_0_, "guard_off")
+      CallPushState(_ARG_0_, "SubOnIllusionDeathBall")
+    end
+  end,
+  OnDead = function(_ARG_0_)
+    CallMessage(_ARG_0_, "dead")
+    WaitFixed(_ARG_0_, 9999)
+  end
+}
+Enemy.kyozoress = {
+  Appear = function(_ARG_0_)
+    Kyozoress_Appear(_ARG_0_, 3)
+  end,
+  Search = function(_ARG_0_)
+    SearchPlayer(_ARG_0_, 0)
+  end,
+  Action = function(_ARG_0_)
+    WaitAnimation(_ARG_0_, "Wait", 3)
+    if GetDistance(_ARG_0_) < 1250 then
+      Kyozoress_Dive(_ARG_0_)
+    elseif GetDistance(_ARG_0_) < 2500 then
+      CallPushState(_ARG_0_, "SubOnArmAttack")
+    elseif GetRandom(_ARG_0_) < 0.3 then
+      CallPushState(_ARG_0_, "SubOnSwingLaserR")
+    elseif GetRandom(_ARG_0_) < 0.6 then
+      CallPushState(_ARG_0_, "SubOnSwingLaserL")
+    else
+      CallPushState(_ARG_0_, "SubOnRiseLaser")
+    end
+  end,
+  SubOnRiseLaser = function(_ARG_0_)
+    WaitAnimation(_ARG_0_, "attackUD01")
+    Kyozoress_ChargeDeathBeam(_ARG_0_, "down", 3)
+    CallMessage(_ARG_0_, "collision_off")
+    ShotLaser(_ARG_0_, "KyozoressBeam", "Kyozoress")
+    ActionAnimation(_ARG_0_, "down")
+    CallMessage(_ARG_0_, "collision_on")
+    WaitAnimation(_ARG_0_, "attackUD04", 1)
+    WaitAnimation(_ARG_0_, "attackUD05")
+  end,
+  SubOnSwingLaserL = function(_ARG_0_)
+    WaitAnimation(_ARG_0_, "attackLR01")
+    Kyozoress_ChargeDeathBeam(_ARG_0_, "left", 3)
+    CallMessage(_ARG_0_, "collision_off")
+    ShotLaser(_ARG_0_, "KyozoressBeam", "Kyozoress")
+    ActionAnimation(_ARG_0_, "left")
+    CallMessage(_ARG_0_, "collision_on")
+    WaitAnimation(_ARG_0_, "attackLR04", 3)
+    WaitAnimation(_ARG_0_, "attackLR05")
+  end,
+  SubOnSwingLaserR = function(_ARG_0_)
+    WaitAnimation(_ARG_0_, "attackRL01")
+    Kyozoress_ChargeDeathBeam(_ARG_0_, "right", 3)
+    CallMessage(_ARG_0_, "collision_off")
+    ShotLaser(_ARG_0_, "KyozoressBeam", "Kyozoress")
+    ActionAnimation(_ARG_0_, "right")
+    CallMessage(_ARG_0_, "collision_on")
+    WaitAnimation(_ARG_0_, "attackRL04", 3)
+    WaitAnimation(_ARG_0_, "attackRL05")
+  end,
+  SubOnArmAttack = function(_ARG_0_)
+    CreateExplosion(_ARG_0_, "DarkWaveL")
+    ActionFixed(_ARG_0_, "Main", 1, 1)
+    CallMessage(_ARG_0_, "collision_on")
+    WaitAnimation(_ARG_0_, "attack02", 3)
+    CallMessage(_ARG_0_, "collision_off")
+    WaitAnimation(_ARG_0_, "attack03")
+  end,
+  OnStun = function(_ARG_0_)
+    CallMessage(_ARG_0_, "collision_on")
+    StunGround(_ARG_0_)
+    CallMessage(_ARG_0_, "collision_off")
+  end,
+  OnDead = function(_ARG_0_)
+    Kyozoress_Breakup(_ARG_0_)
+  end
+}

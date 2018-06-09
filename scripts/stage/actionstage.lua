@@ -205,7 +205,7 @@ function ActionStage.PlayerGetsItem(_ARG_0_, _ARG_1_)
   if _ARG_1_.item == 4 then
     _ARG_0_:ExtendLife()
   end
-  _ARG_0_:AddScore({
+  _ARG_0_:AddScore(({
     50,
     100,
     200,
@@ -215,7 +215,7 @@ function ActionStage.PlayerGetsItem(_ARG_0_, _ARG_1_)
     200,
     200,
     200
-  }[_ARG_1_.item])
+  })[_ARG_1_.item])
 end
 function ActionStage.Score(_ARG_0_, _ARG_1_)
   _ARG_0_:AddScore(_ARG_1_.point)

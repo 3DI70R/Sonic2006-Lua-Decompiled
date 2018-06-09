@@ -1,14 +1,18 @@
 function inherits_from(_ARG_0_)
-  setmetatable({}, {__index = _ARG_0_})
-  _ARG_0_, _ARG_0_ = {}, {
-    __index = {}
+  setmetatable({
+    new = function(_ARG_0_, ...)
+      setmetatable({_class = _UPVALUE1_, _super = _UPVALUE2_}, _UPVALUE0_)
+      ;({_class = _UPVALUE1_, _super = _UPVALUE2_}):constructor(unpack(nil))
+      return {_class = _UPVALUE1_, _super = _UPVALUE2_}
+    end
+  }, {__index = _ARG_0_})
+  return {
+    new = function(_ARG_0_, ...)
+      setmetatable({_class = _UPVALUE1_, _super = _UPVALUE2_}, _UPVALUE0_)
+      ;({_class = _UPVALUE1_, _super = _UPVALUE2_}):constructor(unpack(nil))
+      return {_class = _UPVALUE1_, _super = _UPVALUE2_}
+    end
   }
-  {}.new, _ARG_0_ = function(_ARG_0_, ...)
-    setmetatable({_class = _UPVALUE1_, _super = _UPVALUE2_}, _UPVALUE0_)
-    {_class = _UPVALUE1_, _super = _UPVALUE2_}:constructor(unpack(nil))
-    return {_class = _UPVALUE1_, _super = _UPVALUE2_}
-  end, _ARG_0_
-  return {}
 end
 Class = {}
 function Class.constructor(_ARG_0_)

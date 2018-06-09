@@ -54,4 +54,32 @@ function ActionStage.Clear.Main(_ARG_0_, _ARG_1_)
   end
   Game.Sleep(5)
   _ARG_1_.notify = false
-  for 
+  for _FORARG_ = 1, 4 do
+    if ({
+      stage = _ARG_1_.result_name,
+      score = _ARG_1_:GetScore(),
+      time = _ARG_1_:GetPlayTime(),
+      ring = _ARG_1_:GetRingCount(),
+      timeBonus = _ARG_1_:CalcTimeBonus(),
+      rank = 0,
+      totalScore = self + self,
+      rank = 0 + 1
+    }).totalScore > _ARG_1_:GetRankTable()[1 - 1] then
+      break
+    end
+  end
+  while _ARG_1_.notify == false do
+    Game.Sleep(0)
+  end
+  Game.End()
+end
+function ActionStage.Clear.HudNotify(_ARG_0_, _ARG_1_, _ARG_2_)
+  Game.Log("notify")
+  _ARG_1_.notify = true
+end
+ActionStage.GameOver = inherits_from(State)
+function ActionStage.GameOver.Main(_ARG_0_, _ARG_1_)
+  Game.Log("GameOver:Main")
+  Game.Sleep(5)
+  Game.End()
+end
