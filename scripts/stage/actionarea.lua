@@ -1,23 +1,23 @@
 ActionArea = inherits_from(Object)
-function ActionArea.constructor(_ARG_0_)
-  Object.constructor(_ARG_0_)
+function ActionArea:constructor()
+  Object.constructor(self)
   Game.Log("construct ActionArea")
-  _ARG_0_._comp = {}
+  self._comp = {}
 end
-function ActionArea.Type(_ARG_0_)
+function ActionArea:Type()
   return "ActionArea"
 end
-function ActionArea.Setup(_ARG_0_)
+function ActionArea:Setup()
   Game.Log("ActionArea:Setup")
 end
-function ActionArea.AddComponent(_ARG_0_, _ARG_1_)
-  while next(_ARG_1_, next(_ARG_1_)) ~= nil do
-    table.insert(_ARG_0_._comp, next(_ARG_1_))
+function ActionArea:AddComponent(component)
+  while next(component, next(component)) ~= nil do
+    table.insert(self._comp, next(component))
   end
 end
-function ActionArea.ChangeArea(_ARG_0_, _ARG_1_)
-  stage = _ARG_0_._stage
-  stage:ChangeArea(_ARG_1_)
+function ActionArea:ChangeArea(area)
+  stage = self._stage
+  stage:ChangeArea(area)
 end
-function ActionArea.StartPlaying(_ARG_0_)
+function ActionArea:StartPlaying()
 end
