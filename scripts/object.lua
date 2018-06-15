@@ -105,5 +105,3 @@ State = inherits_from(Class)
 function State:Main(_ARG_1_)
   Game.Log("state.main")
 end
-
-print(Object:GetName())

@@ -1,176 +1,183 @@
 ActionStage = inherits_from(Object)
-function ActionStage.constructor(_ARG_0_)
-  Object.constructor(_ARG_0_)
+function ActionStage:constructor()
+  Object.constructor(self)
   Game.Log("constructor ActionStage")
-  _ARG_0_.states, _ARG_0_.state = {
+  self.states = {
     begin = ActionStage.Start,
     retry = ActionStage.Retry,
     playing = ActionStage.Playing,
     gameover = ActionStage.GameOver,
     clear = ActionStage.Clear
-  }, "begin"
-  _ARG_0_._comp = {}
-  _ARG_0_.areas = {}
-  _ARG_0_._newArea = nil
-  _ARG_0_._score = 0
-  _ARG_0_._life = 5
-  _ARG_0_._playTime = 0
-  _ARG_0_._ringCount = 0
-  _ARG_0_._stepTime = true
-  _ARG_0_._stepMode = "normal"
-  _ARG_0_._stepFuncs = {
+  }
+  self.state = "begin"
+  self._comp = {}
+  self.areas = {}
+  self._newArea = nil
+  self._score = 0
+  self._life = 5
+  self._playTime = 0
+  self._ringCount = 0
+  self._stepTime = true
+  self._stepMode = "normal"
+  self._stepFuncs = {
     normal = ActionStage.stepNormal,
     load = ActionStage.stepLoad,
     load2 = ActionStage.stepLoad2,
     load3 = ActionStage.stepLoad3
   }
-  _ARG_0_.result_name = 0
-  _ARG_0_._extended = false
+  self.result_name = 0
+  self._extended = false
 end
-function ActionStage.Type(_ARG_0_)
+function ActionStage:Type()
   return "ActionStage"
 end
-function ActionStage.Setup(_ARG_0_)
-  Object.Setup(_ARG_0_)
-  _ARG_0_:Load()
+function ActionStage:Setup()
+  Object.Setup(self)
+  self:Load()
 end
-function ActionStage.StageTitle(_ARG_0_)
+function ActionStage:StageTitle()
 end
-function ActionStage.NewArea(_ARG_0_, _ARG_1_)
-  assert(_ARG_1_.Type() == "ActionArea", "Not inherited from ActionArea!")
-  _ARG_1_:new():Setup()
-  _ARG_0_._areaobj, _ARG_1_:new()._stage = _ARG_1_:new(), _ARG_0_
+function ActionStage:NewArea(area)
+  assert(area.Type() == "ActionArea", "Not inherited from ActionArea!")
+  local newArea = area:new()
+  newArea:Setup()
+
+  self._areaobj = newArea
+  self._stage = self
 end
-function ActionStage.Load(_ARG_0_)
-  _ARG_0_.titleHud = _ARG_0_:StageTitle()
-  _ARG_0_.loadingHud = CreateTask("loading")
+function ActionStage:Load()
+  self.titleHud = self:StageTitle()
+  self.loadingHud = CreateTask("loading")
   Game.SeparateRenderAndExecute(true)
   Game.PreloadPlayer()
-  if _ARG_0_.area ~= nil and _ARG_0_.areas[_ARG_0_.area] ~= nil then
-    _ARG_0_:NewArea(_ARG_0_.areas[_ARG_0_.area])
+  if self.area ~= nil and self.areas[self.area] ~= nil then
+    self:NewArea(self.areas[self.area])
   end
   Game.StartPlaying()
 end
-function ActionStage.AddComponent(_ARG_0_, _ARG_1_)
-  while next(_ARG_1_, next(_ARG_1_)) ~= nil do
-    table.insert(_ARG_0_._comp, next(_ARG_1_))
+function ActionStage:AddComponent(component)
+  while next(component, next(component)) ~= nil do
+    table.insert(self._comp, next(component))
   end
 end
-function ActionStage.stepNormal(_ARG_0_, _ARG_1_)
-  if _ARG_0_.loadingHud ~= nil then
-    _ARG_0_.loadingHud:ProcessMessage("HudHide")
-    _ARG_0_.loadingHud = nil
+function ActionStage:stepNormal(deltaTime)
+  if self.loadingHud ~= nil then
+    self.loadingHud:ProcessMessage("HudHide")
+    self.loadingHud = nil
   end
-  if _ARG_0_.areas ~= nil and _ARG_0_._newArea ~= nil and _ARG_0_._newArea ~= _ARG_0_.area and _ARG_0_.areas[_ARG_0_._newArea] ~= nil then
+  if self.areas ~= nil and self._newArea ~= nil and self._newArea ~= self.area and self.areas[self._newArea] ~= nil then
     Game.StopBGM()
-    _ARG_0_._areaobj = nil
+    self._areaobj = nil
     Game.ChangeArea()
-    _ARG_0_.area = _ARG_0_._newArea
-    if _ARG_0_.mainHud ~= nil then
-      _ARG_0_.mainHud:ProcessMessage("HudHide")
+    self.area = self._newArea
+    if self.mainHud ~= nil then
+      self.mainHud:ProcessMessage("HudHide")
     end
-    _ARG_0_._stepMode = "load"
+    self._stepMode = "load"
   end
-  if _ARG_0_._stepTime == true then
-    _ARG_0_._playTime = _ARG_0_._playTime + _ARG_1_
+  if self._stepTime == true then
+    self._playTime = self._playTime + deltaTime
   end
-  if _ARG_0_.mainHud ~= nil then
-    _ARG_0_.mainHud:ProcessMessage("HudSetTime", {
-      value = _ARG_0_:GetPlayTime()
+  if self.mainHud ~= nil then
+    self.mainHud:ProcessMessage("HudSetTime", {
+      value = self:GetPlayTime()
     })
   end
-  if _ARG_0_._areaobj ~= nil then
-    _ARG_0_._areaobj:Exec(_ARG_1_)
+  if self._areaobj ~= nil then
+    self._areaobj:Exec(deltaTime)
   end
 end
-function ActionStage.stepLoad(_ARG_0_, _ARG_1_)
-  _ARG_0_._stepMode = "load2"
+function ActionStage:stepLoad(deltaTime)
+  self._stepMode = "load2"
   Game.DestroyWorld()
 end
-function ActionStage.stepLoad2(_ARG_0_, _ARG_1_)
+function ActionStage:stepLoad2(deltaTime)
   Game.SetupWorld()
-  _ARG_0_.loadingHud = CreateTask("loading")
+  self.loadingHud = CreateTask("loading")
   Game.SeparateRenderAndExecute(true)
-  _ARG_0_:NewArea(_ARG_0_.areas[_ARG_0_._newArea])
+  self:NewArea(self.areas[self._newArea])
   Game.StartPlaying()
-  _ARG_0_:StartPlaying()
+  self:StartPlaying()
   Game.SeparateRenderAndExecute(false)
-  _ARG_0_._stepMode = "load3"
+  self._stepMode = "load3"
 end
-function ActionStage.stepLoad3(_ARG_0_, _ARG_1_)
-  if _ARG_0_.loadingHud ~= nil then
-    _ARG_0_.loadingHud:ProcessMessage("HudHide")
+function ActionStage:stepLoad3(deltaTime)
+  if self.loadingHud ~= nil then
+    self.loadingHud:ProcessMessage("HudHide")
   end
-  if _ARG_0_.mainHud ~= nil then
-    _ARG_0_.mainHud:ProcessMessage("HudShow")
+  if self.mainHud ~= nil then
+    self.mainHud:ProcessMessage("HudShow")
   end
-  _ARG_0_._stepMode = "normal"
+  self._stepMode = "normal"
 end
-function ActionStage.Step(_ARG_0_, _ARG_1_)
-  _ARG_0_._stepFuncs[_ARG_0_._stepMode](_ARG_0_, _ARG_1_)
+function ActionStage:Step(deltaTime)
+  self._stepFuncs[self._stepMode](self, deltaTime)
 end
-function ActionStage.ChangeArea(_ARG_0_, _ARG_1_)
-  _ARG_0_._newArea = _ARG_1_
+function ActionStage:ChangeArea(areaName)
+  self._newArea = areaName
   Game.Log("ActionStage.ChangeArea")
 end
-function ActionStage.Retry(_ARG_0_)
+function ActionStage:Retry()
 end
-function ActionStage.StartPlaying(_ARG_0_)
-  _ARG_0_._areaobj:StartPlaying()
+function ActionStage:StartPlaying()
+  self._areaobj:StartPlaying()
 end
-function ActionStage.GetScore(_ARG_0_)
-  return _ARG_0_._score
+function ActionStage:GetScore()
+  return self._score
 end
-function ActionStage.SetScore(_ARG_0_, _ARG_1_)
-  _ARG_0_._score = _ARG_1_
-  if _ARG_0_.mainHud ~= nil then
-    _ARG_0_.mainHud:ProcessMessage("HudSetScore", {
-      value = _ARG_0_._score
+function ActionStage:SetScore(score)
+  self._score = score
+  if self.mainHud ~= nil then
+    self.mainHud:ProcessMessage("HudSetScore", {
+      value = self._score
     })
   end
 end
-function ActionStage.AddScore(_ARG_0_, _ARG_1_)
-  _ARG_0_:SetScore(_ARG_0_._score + _ARG_1_)
+function ActionStage:AddScore(score)
+  self:SetScore(self._score + score)
 end
-function ActionStage.GetPlayTime(_ARG_0_)
-  return _ARG_0_._playTime
+function ActionStage:GetPlayTime()
+  return self._playTime
 end
-function ActionStage.GetLife(_ARG_0_)
-  return _ARG_0_._life
+function ActionStage:GetLife()
+  return self._life
 end
-function ActionStage.GetRingCount(_ARG_0_)
-  return _ARG_0_._ringCount
+function ActionStage:GetRingCount()
+  return self._ringCount
 end
-function ActionStage.SetLife(_ARG_0_, _ARG_1_)
-  _ARG_0_._life = _ARG_1_
-  if _ARG_0_.mainHud ~= nil then
-    _ARG_0_.mainHud:ProcessMessage("HudSetPlayerCount", {value = _ARG_1_})
+function ActionStage:SetLife(lifeCount)
+  self._life = lifeCount
+  if self.mainHud ~= nil then
+    self.mainHud:ProcessMessage("HudSetPlayerCount", {value = lifeCount})
   end
 end
-function ActionStage.setRingCount(_ARG_0_, _ARG_1_)
-  _ARG_0_._ringCount = _ARG_1_
-  if not _ARG_0_._extended and _ARG_1_ >= 100 then
-    _ARG_0_._extended = true
-    _ARG_0_:ExtendLife()
+function ActionStage:setRingCount(ringCount)
+  self._ringCount = ringCount
+  if not self._extended and ringCount >= 100 then
+    self._extended = true
+    self:ExtendLife()
   end
-  if _ARG_0_.mainHud ~= nil then
-    _ARG_0_.mainHud:ProcessMessage("HudSetRingCount", {value = _ARG_1_})
+  if self.mainHud ~= nil then
+    self.mainHud:ProcessMessage("HudSetRingCount", {value = ringCount})
   end
 end
-function ActionStage.CalcTimeBonus(_ARG_0_)
-  if 30000 - math.floor(_ARG_0_._playTime) * 40 < 0 then
+function ActionStage:CalcTimeBonus()
+  local timeBonus = 30000 - math.floor(self._playTime) * 40
+
+  if timeBonus < 0 then
     return 0
   end
-  return 30000 - math.floor(_ARG_0_._playTime) * 40
+
+  return timeBonus
 end
-function ActionStage.ExtendLife(_ARG_0_)
-  _ARG_0_:SetLife(_ARG_0_:GetLife() + 1)
+function ActionStage:ExtendLife()
+  self:SetLife(self:GetLife() + 1)
   Game.ProcessMessage("LEVEL", "PlaySE", {bank = "system", id = "extend"})
 end
-function ActionStage.MissionComplete(_ARG_0_)
-  _ARG_0_._stepTime = false
+function ActionStage:MissionComplete()
+  self._stepTime = false
 end
-function ActionStage.GetRankTable(_ARG_0_)
+function ActionStage:GetRankTable()
   return {
     27000,
     25000,
@@ -178,34 +185,34 @@ function ActionStage.GetRankTable(_ARG_0_)
     18000
   }
 end
-function ActionStage.ControlPause(_ARG_0_, _ARG_1_)
-  Game.ProcessMessage("LEVEL", "ControlPause", {enabled = _ARG_1_})
+function ActionStage:ControlPause(pauseEnabled)
+  Game.ProcessMessage("LEVEL", "ControlPause", {enabled = pauseEnabled})
 end
-function ActionStage.CallEvent(_ARG_0_, _ARG_1_)
-  if _ARG_0_._areaobj ~= nil then
+function ActionStage:CallEvent(eventData)
+  if self._areaobj ~= nil then
     Game.Log("event")
-    if _ARG_0_._areaobj[_ARG_1_.eventID] ~= nil then
-      _ARG_0_._areaobj[_ARG_1_.eventID](_ARG_0_._areaobj, _ARG_1_.otherID)
+    if self._areaobj[eventData.eventID] ~= nil then
+      self._areaobj[eventData.eventID](self._areaobj, eventData.otherID)
     else
       Game.Log("unknown event")
     end
   end
 end
-function ActionStage.Switch(_ARG_0_, _ARG_1_)
-  if _ARG_0_._areaobj ~= nil then
+function ActionStage:Switch(switchData)
+  if self._areaobj ~= nil then
     Game.Log("switch")
-    if _ARG_0_._areaobj[_ARG_1_.eventID] ~= nil then
-      _ARG_0_._areaobj[_ARG_1_.eventID](_ARG_0_._areaobj, _ARG_1_.on, _ARG_1_.otherID, _ARG_1_.actorID)
+    if self._areaobj[switchData.eventID] ~= nil then
+      self._areaobj[switchData.eventID](self._areaobj, switchData.on, switchData.otherID, switchData.actorID)
     else
       Game.Log("unknown switch")
     end
   end
 end
-function ActionStage.PlayerGetsItem(_ARG_0_, _ARG_1_)
-  if _ARG_1_.item == 4 then
-    _ARG_0_:ExtendLife()
+function ActionStage:PlayerGetsItem(itemData)
+  if itemData.item == 4 then
+    self:ExtendLife()
   end
-  _ARG_0_:AddScore(({
+  self:AddScore(({
     50,
     100,
     200,
@@ -215,37 +222,37 @@ function ActionStage.PlayerGetsItem(_ARG_0_, _ARG_1_)
     200,
     200,
     200
-  })[_ARG_1_.item])
+  })[itemData.item])
 end
-function ActionStage.Score(_ARG_0_, _ARG_1_)
-  _ARG_0_:AddScore(_ARG_1_.point)
+function ActionStage:Score(scoreData)
+  self:AddScore(scoreData.point)
 end
-function ActionStage.SetScoreMsg(_ARG_0_, _ARG_1_)
-  _ARG_0_:SetScore(_ARG_1_.point)
+function ActionStage:SetScoreMsg(scoreData)
+  self:SetScore(scoreData.point)
 end
-function ActionStage.PlayerGetsRing(_ARG_0_, _ARG_1_)
-  if _ARG_1_.score == true then
-    _ARG_0_:AddScore(10)
+function ActionStage:PlayerGetsRing(ringGetParams)
+  if ringGetParams.score == true then
+    self:AddScore(10)
   end
 end
-function ActionStage.PlayerGetsPsiValue(_ARG_0_, _ARG_1_)
-  if _ARG_0_.mainHud ~= nil then
-    _ARG_0_.mainHud:ProcessMessage("HudSetPower", {
-      value = _ARG_1_.psiValue / 100
+function ActionStage:PlayerGetsPsiValue(psiValueData)
+  if self.mainHud ~= nil then
+    self.mainHud:ProcessMessage("HudSetPower", {
+      value = psiValueData.psiValue / 100
     })
   end
 end
-function ActionStage.GetPlayerCount(_ARG_0_, _ARG_1_)
+function ActionStage:GetPlayerCount(outLifeCountData)
   Game.Log("GetPlayerCount")
-  _ARG_1_.count = _ARG_0_._life
+  outPlayerCountData.count = self._life
 end
-function ActionStage.PlayerReachesTheGoal(_ARG_0_, _ARG_1_)
+function ActionStage:PlayerReachesTheGoal(playerInfo)
 end
-function ActionStage.NotifyRestart(_ARG_0_, _ARG_1_)
-  _ARG_0_:setRingCount(0)
-  _ARG_0_:SetScore(0)
-  _ARG_0_:StartPlaying()
+function ActionStage:NotifyRestart(unused)
+  self:setRingCount(0)
+  self:SetScore(0)
+  self:StartPlaying()
 end
-function ActionStage.SetRingCount(_ARG_0_, _ARG_1_)
-  _ARG_0_:setRingCount(_ARG_1_.count)
+function ActionStage:SetRingCount(ringCountData)
+  self:setRingCount(ringCountData.count)
 end
