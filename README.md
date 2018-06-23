@@ -6,6 +6,6 @@ It can contain various errors, such as empty branches, invalid for loops, and ot
 
 # Changes to decompiled code
 
-- unpack(nil) was replaced with unpack(...), since this construction occurs only in vararg methods
+- unpack(nil) was replaced with ..., since this construction occurs only in vararg methods
 - strange values in for loops (0 - 1, 1 - 1 - 1, 0 + 1) were replaced by iterator value
 - value of totalScore in scripts\stages\states\standard.lua was written as self.score + self.timeBonus since unluac enters infinite loop in this part
