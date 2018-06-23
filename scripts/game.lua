@@ -1380,7 +1380,7 @@ function Step(_ARG_0_)
   g_level:Exec(_ARG_0_)
 end
 function ProcessMessage(_ARG_0_, ...)
-  return g_level:ProcessEvent(_ARG_0_, unpack(...))
+  return g_level:ProcessEvent(_ARG_0_, ...)
 end
 function CreateTask(_ARG_0_, _ARG_1_)
   return Game.CreateObject("Task*", _ARG_0_, _ARG_1_)

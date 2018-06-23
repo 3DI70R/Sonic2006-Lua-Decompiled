@@ -2,14 +2,14 @@ function inherits_from(_ARG_0_)
   setmetatable({
     new = function(_ARG_0_, ...)
       setmetatable({_class = _UPVALUE1_, _super = _UPVALUE2_}, _UPVALUE0_)
-      ;({_class = _UPVALUE1_, _super = _UPVALUE2_}):constructor(unpack(...))
+      ;({_class = _UPVALUE1_, _super = _UPVALUE2_}):constructor(...)
       return {_class = _UPVALUE1_, _super = _UPVALUE2_}
     end
   }, {__index = _ARG_0_})
   return {
     new = function(_ARG_0_, ...)
       setmetatable({_class = _UPVALUE1_, _super = _UPVALUE2_}, _UPVALUE0_)
-      ;({_class = _UPVALUE1_, _super = _UPVALUE2_}):constructor(unpack(...))
+      ;({_class = _UPVALUE1_, _super = _UPVALUE2_}):constructor(...)
       return {_class = _UPVALUE1_, _super = _UPVALUE2_}
     end
   }
@@ -65,11 +65,11 @@ function Object.Wake(_ARG_0_)
 end
 function Object.ProcessEvent(_ARG_0_, _ARG_1_, ...)
   if _ARG_0_._s ~= nil and _ARG_0_._s[_ARG_1_] ~= nil then
-    _ARG_0_._s[_ARG_1_](_ARG_0_._s, _ARG_0_, unpack(...))
+    _ARG_0_._s[_ARG_1_](_ARG_0_._s, _ARG_0_, ...)
     return true
   end
   if _ARG_0_[_ARG_1_] ~= nil then
-    _ARG_0_[_ARG_1_](_ARG_0_, unpack(...))
+    _ARG_0_[_ARG_1_](_ARG_0_, ...)
     return true
   end
   return false
