@@ -1359,29 +1359,40 @@ Boss = {}
 Town = {}
 Other = {}
 EndOfTheWorld = {}
-function ScriptCallback(_ARG_0_, _ARG_1_)
-  Game.ExecScript(_ARG_1_)
+function ScriptCallback(index, value)
+  Game.ExecScript(value)
 end
-function Begin(_ARG_0_)
+function Begin(stageData)
+
+  local levelScript = 1
+  local levelCategory = 2
+  local levelStory = 3
+  local levelStage = 4
+
   Game.Log("load level scripts")
   table.foreach(g_gameScripts, ScriptCallback)
-  Game.ExecScript(g_stageMap[_ARG_0_.stage][1])
-  assert(_G[g_stageMap[_ARG_0_.stage][2]][g_stageMap[_ARG_0_.stage][3]].Type() == "ActionStage", "Not inherited from ActionArea!")
-  if _G[g_stageMap[_ARG_0_.stage][2]][g_stageMap[_ARG_0_.stage][3]].scripts ~= nil then
-    table.foreach(_G[g_stageMap[_ARG_0_.stage][2]][g_stageMap[_ARG_0_.stage][3]].scripts, ScriptCallback)
+  Game.ExecScript(g_stageMap[stageData.stage][levelScript])
+  
+  assert(_G[g_stageMap[stageData.stage][levelCategory]][g_stageMap[stageData.stage][levelStory]].Type() == "ActionStage", "Not inherited from ActionArea!")
+  
+  if _G[g_stageMap[stageData.stage][levelCategory]][g_stageMap[stageData.stage][levelStory]].scripts ~= nil then
+    table.foreach(_G[g_stageMap[stageData.stage][levelCategory]][g_stageMap[stageData.stage][levelStory]].scripts, ScriptCallback)
   end
-  g_level = _G[g_stageMap[_ARG_0_.stage][2]][g_stageMap[_ARG_0_.stage][3]]:new()
-  if g_stageMap[_ARG_0_.stage][4] ~= nil then
-    g_level.area = g_stageMap[_ARG_0_.stage][4]
+
+  g_level = _G[g_stageMap[stageData.stage][levelCategory]][g_stageMap[stageData.stage][levelStory]]:new()
+  
+  if g_stageMap[stageData.stage][levelStage] ~= nil then
+    g_level.area = g_stageMap[stageData.stage][levelStage]
   end
+
   g_level:Setup()
 end
-function Step(_ARG_0_)
-  g_level:Exec(_ARG_0_)
+function Step(deltaTime)
+  g_level:Exec(deltaTime)
 end
-function ProcessMessage(_ARG_0_, ...)
-  return g_level:ProcessEvent(_ARG_0_, unpack(...))
+function ProcessMessage(event, ...)
+  return g_level:ProcessEvent(event, ...)
 end
-function CreateTask(_ARG_0_, _ARG_1_)
-  return Game.CreateObject("Task*", _ARG_0_, _ARG_1_)
+function CreateTask(taskName, taskData)
+  return Game.CreateObject("Task*", taskName, taskData)
 end

@@ -25,7 +25,7 @@ function inherits_from(super)
   function copy:new(...)
     local newCopy = deepCopyTable(self)
     hideNewFunctions(newCopy)
-    newCopy:constructor(unpack(...))
+    newCopy:constructor(...)
     return newCopy
   end
 
@@ -91,11 +91,11 @@ function Object:Wake()
 end
 function Object:ProcessEvent(event, ...)
   if self._s ~= nil and self._s[event] ~= nil then
-    self._s[state](self._s, self, unpack(...))
+    self._s[state](self._s, self, ...)
     return true
   end
   if self[event] ~= nil then
-    self[event](self, unpack(...))
+    self[event](self, ...)
     return true
   end
   return false
