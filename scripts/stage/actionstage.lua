@@ -43,7 +43,7 @@ function ActionStage:NewArea(area)
   newArea:Setup()
 
   self._areaobj = newArea
-  self._stage = self
+  newArea._stage = self
 end
 function ActionStage:Load()
   self.titleHud = self:StageTitle()
